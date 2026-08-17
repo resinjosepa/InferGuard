@@ -1,0 +1,250 @@
+{"text": "What is 45 percent of 1200?", "label": "simple"}
+{"text": "Translate the following Spanish phrase into English: '¿Dónde está la biblioteca?'", "label": "simple"}
+{"text": "Can you capitalize all the words in this string: 'hello world from python'?", "label": "simple"}
+{"text": "What is the past tense of the verb 'sing'?", "label": "simple"}
+{"text": "Convert 100 Fahrenheit to Celsius.", "label": "simple"}
+{"text": "How many hours are in 3 weeks?", "label": "simple"}
+{"text": "What is the chemical formula for water?", "label": "simple"}
+{"text": "Spell the word 'accommodation'.", "label": "simple"}
+{"text": "Is 107 a prime number?", "label": "simple"}
+{"text": "Give me the definition of the word 'redundant'.", "label": "simple"}
+{"text": "Rewrite this sentence to be in the passive voice: 'The dog chased the cat.'", "label": "simple"}
+{"text": "What is the square root of 256?", "label": "simple"}
+{"text": "List the planets in our solar system starting from the sun.", "label": "simple"}
+{"text": "What is the atomic number of carbon?", "label": "simple"}
+{"text": "Correct the spelling and grammar in this sentence: 'They was going to the store yesterday.'", "label": "simple"}
+{"text": "Is the word 'racecar' a palindrome?", "label": "simple"}
+{"text": "What does the abbreviation 'HTML' stand for?", "label": "simple"}
+{"text": "In what year did the Titanic sink?", "label": "simple"}
+{"text": "Convert the binary number 101010 to decimal.", "label": "simple"}
+{"text": "Identify the parts of speech for each word in: 'The blue bird flies.'", "label": "simple"}
+{"text": "What is the antonym of 'benevolent'?", "label": "simple"}
+{"text": "Give me the ASCII value of the letter 'A'.", "label": "simple"}
+{"text": "Calculate 7 factorial.", "label": "simple"}
+{"text": "Is a tomato classified as a fruit or a vegetable?", "label": "simple"}
+{"text": "What is the name of the tallest mountain in the world?", "label": "simple"}
+{"text": "Convert 500 milliliters to liters.", "label": "simple"}
+{"text": "Which country has the capital city of Tokyo?", "label": "simple"}
+{"text": "How many syllables are in the word 'extraordinary'?", "label": "simple"}
+{"text": "What is the value of pi to 5 decimal places?", "label": "simple"}
+{"text": "Is the phrase 'it is raining cats and dogs' an idiom or a metaphor?", "label": "simple"}
+{"text": "Change this sentence from past tense to future tense: 'She went to Paris last summer.'", "label": "simple"}
+{"text": "What is the sum of the angles in a triangle?", "label": "simple"}
+{"text": "How many feet are in a mile?", "label": "simple"}
+{"text": "What is the base-10 equivalent of the hexadecimal number 1A?", "label": "simple"}
+{"text": "Name the three primary colors.", "label": "simple"}
+{"text": "Is mercury a solid or a liquid at room temperature?", "label": "simple"}
+{"text": "What is the opposite of the word 'vertical'?", "label": "simple"}
+{"text": "Identify the subject in the sentence: 'The quick brown fox jumps over the lazy dog.'", "label": "simple"}
+{"text": "What is the Roman numeral for 2024?", "label": "simple"}
+{"text": "How many days are in a leap year?", "label": "simple"}
+{"text": "What is the currency of Japan?", "label": "simple"}
+{"text": "Is the number 42 even or odd?", "label": "simple"}
+{"text": "Translate 'thank you' into German.", "label": "simple"}
+{"text": "What is the name of the process plants use to convert sunlight into energy?", "label": "simple"}
+{"text": "Add the numbers 354, 82, and 19.", "label": "simple"}
+{"text": "What is the suffix in the word 'beautiful'?", "label": "simple"}
+{"text": "List the vowels in the English alphabet.", "label": "simple"}
+{"text": "Is iron a metal or a non-metal?", "label": "simple"}
+{"text": "How many meters are in a kilometer?", "label": "simple"}
+{"text": "What is the comparative form of the adjective 'good'?", "label": "simple"}
+{"text": "What is the standard procedure for onboarding new hires according to our internal handbook?", "label": "rag"}
+{"text": "Under our current health insurance coverage, are acupuncture treatments covered?", "label": "rag"}
+{"text": "Can you tell me the policy on carrying over unused vacation days to the next fiscal year?", "label": "rag"}
+{"text": "What was the total revenue reported by the marketing department in the Q2 performance report?", "label": "rag"}
+{"text": "According to the product specifications sheet, what is the maximum operating temperature of the model X-500 sensor?", "label": "rag"}
+{"text": "I need to check the SLA for response times on critical severity support tickets.", "label": "rag"}
+{"text": "What are the guidelines for using the company credit card for client dinners?", "label": "rag"}
+{"text": "What was the main reason for the project delay mentioned in last week's team status report?", "label": "rag"}
+{"text": "Can you look up the default port configuration for our internal database service?", "label": "rag"}
+{"text": "What does the employee manual say about remote work equipment allowances?", "label": "rag"}
+{"text": "According to our coding standards, what is the naming convention for private variables in TypeScript?", "label": "rag"}
+{"text": "What are the cancellation terms for the enterprise subscription we signed with Acme Corp?", "label": "rag"}
+{"text": "Find the section in the tenant agreement that outlines the rules for visitor parking.", "label": "rag"}
+{"text": "According to the user manual, how do I resolve error code E-104 on the office printer?", "label": "rag"}
+{"text": "I need the exact wording of the non-compete clause in our standard employment contract.", "label": "rag"}
+{"text": "What was the outcome of the security audit conducted on our cloud infrastructure last November?", "label": "rag"}
+{"text": "What is the recommended dosage for pediatric patients according to the product insert of this medication?", "label": "rag"}
+{"text": "According to the API documentation, what is the rate limit for the GET /users endpoint?", "label": "rag"}
+{"text": "Where does the safety manual say we should assemble in case of a fire alarm?", "label": "rag"}
+{"text": "What were the quarterly sales targets for the European region as defined in the 2025 strategic plan?", "label": "rag"}
+{"text": "According to our codebase guidelines, which branch should we target for hotfixes?", "label": "rag"}
+{"text": "What does the FAQ say about how users can reset their password if locked out?", "label": "rag"}
+{"text": "I need the billing address for the vendor 'Stripe Inc.' from our supplier register.", "label": "rag"}
+{"text": "According to the release notes, what bugs were fixed in patch v2.4.1?", "label": "rag"}
+{"text": "What are the eligibility criteria for the company's educational reimbursement program?", "label": "rag"}
+{"text": "What did the legal team advise regarding the use of open-source libraries in our core product?", "label": "rag"}
+{"text": "According to the architecture design document, what database replication strategy are we using?", "label": "rag"}
+{"text": "What is the procedure for reporting a lost building access badge?", "label": "rag"}
+{"text": "In the user guide, what are the steps to export data to CSV format?", "label": "rag"}
+{"text": "What was the feedback from client beta testers regarding the new dashboard layout?", "label": "rag"}
+{"text": "According to the data privacy policy, how long do we retain user activity logs?", "label": "rag"}
+{"text": "What is the deductible amount for dental procedures under our premium insurance plan?", "label": "rag"}
+{"text": "According to the installation guide, what are the minimum hardware requirements for the desktop client?", "label": "rag"}
+{"text": "What is the current policy on booking business class travel for international flights?", "label": "rag"}
+{"text": "I need the part number for the replacement water filter used in our breakroom refrigerator.", "label": "rag"}
+{"text": "What were the main action items assigned to the product team during the retrospective meeting?", "label": "rag"}
+{"text": "According to the style guide, what is the hex code for our primary brand color?", "label": "rag"}
+{"text": "What does the warranty policy say about accidental damage to company-issued laptops?", "label": "rag"}
+{"text": "According to the setup guide, how do you configure the environment variables for the staging server?", "label": "rag"}
+{"text": "What were the main conclusions of the market research study on Gen Z shopping habits?", "label": "rag"}
+{"text": "According to the code of conduct, what constitutes a conflict of interest for board members?", "label": "rag"}
+{"text": "What is the default timeout period for inactivity on our secure employee portal?", "label": "rag"}
+{"text": "In the training manual, what is the recommended method for handling difficult customer complaints?", "label": "rag"}
+{"text": "According to the deployment log, who authorized the production release on Friday afternoon?", "label": "rag"}
+{"text": "What is the maximum weight capacity of the warehouse shelving units according to safety specs?", "label": "rag"}
+{"text": "I need the contact details of the primary account manager at AWS as listed in our partner directory.", "label": "rag"}
+{"text": "According to the database schema document, what is the primary key of the transactions table?", "label": "rag"}
+{"text": "What are the guidelines for submitting a pull request to the main repository?", "label": "rag"}
+{"text": "According to the compliance report, what areas did we fail to meet ISO 27001 standards?", "label": "rag"}
+{"text": "What is the procedure for requesting a temporary license key for development testing?", "label": "rag"}
+{"text": "Who was the president of the United States when the first iPhone was released, and what was their political party?", "label": "multi_hop"}
+{"text": "Find the total revenue of company A and company B in 2023, and tell me which one grew faster compared to their 2022 performance.", "label": "multi_hop"}
+{"text": "Compare the battery capacity of the iPhone 15 with the Samsung Galaxy S23, and determine which one offers longer talk time based on official specs.", "label": "multi_hop"}
+{"text": "Identify the director of the movie Inception, find their date of birth, and calculate how old they were when the movie was released.", "label": "multi_hop"}
+{"text": "Looking at the Q3 and Q4 sales figures, which product line had the highest percentage increase in sales, and who was the lead manager for that line?", "label": "multi_hop"}
+{"text": "Find the current CEO of Microsoft, look up where they got their bachelor's degree, and find out what year that university was founded.", "label": "multi_hop"}
+{"text": "Compare the server response times of our US-East and US-West databases during the peak hour of 3 PM, and calculate the difference in milliseconds.", "label": "multi_hop"}
+{"text": "Which country has the largest population in South America, and what is the capital city of its neighboring country to the west?", "label": "multi_hop"}
+{"text": "Who won the Nobel Prize in Physics in 1921, and what was the main topic of their prize-winning research?", "label": "multi_hop"}
+{"text": "Check the price of gas in California and New York today, calculate the average, and determine if it is higher than the national average.", "label": "multi_hop"}
+{"text": "Which employee has the highest sales volume this quarter, what department do they work in, and who is their direct supervisor?", "label": "multi_hop"}
+{"text": "Find the release date of the book 'To Kill a Mockingbird' and calculate how many years elapsed before the movie adaptation was released.", "label": "multi_hop"}
+{"text": "Compare the subscription costs of Slack, Teams, and Zoom for a team of 150 users, and identify the cheapest option assuming annual billing.", "label": "multi_hop"}
+{"text": "Who is the current Prime Minister of Canada, when did they take office, and who was their immediate predecessor?", "label": "multi_hop"}
+{"text": "Look at the project timeline for Phase 1 and Phase 2, identify the tasks that overlap, and calculate the total overlapping duration in days.", "label": "multi_hop"}
+{"text": "Which software library, React or Vue, has more stars on GitHub today, and when was the repository for the more popular one created?", "label": "multi_hop"}
+{"text": "Find the actor who played Neo in The Matrix, identify their latest film, and check if it won any Academy Awards.", "label": "multi_hop"}
+{"text": "Compare the annual rainfall of Seattle and London, and determine which city gets more rain in the month of October.", "label": "multi_hop"}
+{"text": "Look up the GDP of France and Germany, calculate the ratio between them, and compare it to the ratio from ten years ago.", "label": "multi_hop"}
+{"text": "Identify the author of the novel '1984', find the city they were born in, and what country that city is located in today.", "label": "multi_hop"}
+{"text": "Compare the energy consumption of a 100W incandescent bulb and a 12W LED bulb over a year of 8-hour daily use, and calculate the cost savings.", "label": "multi_hop"}
+{"text": "Find the latest version of Python, look up when it was released, and calculate how many months have passed since then.", "label": "multi_hop"}
+{"text": "Who is the lead guitarist of the band Queen, when did he receive his PhD, and what was the topic of his thesis?", "label": "multi_hop"}
+{"text": "Compare the storage capacity and price of the entry-level iPad and iPad Air, and determine which one offers the lower cost per gigabyte.", "label": "multi_hop"}
+{"text": "Identify the first person to walk on the moon, find the name of the spacecraft they used, and what year that mission launched.", "label": "multi_hop"}
+{"text": "Compare the user rating of our mobile app on iOS and Android, and identify the most common complaint on the platform with the lower rating.", "label": "multi_hop"}
+{"text": "Who directed the movie Interstellar, and did they also direct the movie Dunkirk?", "label": "multi_hop"}
+{"text": "Compare the density of gold and platinum, and calculate the weight difference for a 10 cubic centimeter block of each.", "label": "multi_hop"}
+{"text": "Look up the coordinates of New York City and London, and calculate the approximate distance between them using the Haversine formula.", "label": "multi_hop"}
+{"text": "Who wrote the play 'Hamlet', what year was it estimated to be written, and who was the ruling monarch of England at that time?", "label": "multi_hop"}
+{"text": "Compare the speed of sound in air and water at 20 degrees Celsius, and calculate how much faster it travels in water.", "label": "multi_hop"}
+{"text": "Find the parent company of Instagram, look up their stock symbol, and check their stock price change from yesterday's close.", "label": "multi_hop"}
+{"text": "Which country won the FIFA World Cup in 2018, and who was the captain of that team during the tournament?", "label": "multi_hop"}
+{"text": "Compare the nutritional info of a serving of almonds versus walnuts, and determine which one has higher protein content per gram.", "label": "multi_hop"}
+{"text": "Who invented the telephone, when did they receive the patent, and what was the patent number?", "label": "multi_hop"}
+{"text": "Identify the two main developers of the TCP/IP protocol, and check if they are still alive today.", "label": "multi_hop"}
+{"text": "Compare the average annual temperatures of Miami and Phoenix, and determine which city has a higher average temperature in July.", "label": "multi_hop"}
+{"text": "Look up the founder of Tesla, find the other companies they founded, and list them in chronological order of their founding dates.", "label": "multi_hop"}
+{"text": "Compare the size of the Pacific Ocean and the Atlantic Ocean, and calculate what percentage of the earth's surface they cover combined.", "label": "multi_hop"}
+{"text": "Find the year the Eiffel Tower was completed, and calculate how many years after the French Revolution that was.", "label": "multi_hop"}
+{"text": "Who painted the Mona Lisa, what museum is it currently located in, and what is the admission price for that museum?", "label": "multi_hop"}
+{"text": "Compare the carbon footprint of driving an electric car versus a gasoline car over 10,000 miles, assuming the average US electricity grid mix.", "label": "multi_hop"}
+{"text": "Identify the current capital of Brazil, find the year it was designated as capital, and what city was the capital before it.", "label": "multi_hop"}
+{"text": "Who wrote the book 'The Hobbit', when was it first published, and who was the publisher?", "label": "multi_hop"}
+{"text": "Compare the performance of the M1 chip and the M2 chip in terms of CPU speed, and calculate the percentage improvement.", "label": "multi_hop"}
+{"text": "Look up the definition of a leap second, find when the last leap second was added, and calculate the time elapsed since then.", "label": "multi_hop"}
+{"text": "Identify the voice actor for Woody in Toy Story, find their date of birth, and calculate their age when the first movie came out.", "label": "multi_hop"}
+{"text": "Compare the size of the state of Texas and the country of France, and determine which one has a larger land area.", "label": "multi_hop"}
+{"text": "Who won the first Super Bowl, what was the score, and which stadium did the game take place in?", "label": "multi_hop"}
+{"text": "Compare the half-life of Carbon-14 and Uranium-238, and calculate the ratio between them.", "label": "multi_hop"}
+{"text": "Book a meeting room for our team tomorrow from 2 PM to 4 PM and invite user1@example.com.", "label": "agentic"}
+{"text": "Send an email to my manager summarizing the weekly progress report I wrote yesterday.", "label": "agentic"}
+{"text": "Find the latest stock price of Apple, update the investment tracking Google Sheet, and send me a message on Slack.", "label": "agentic"}
+{"text": "Check my calendar for next Friday afternoon and reschedule any conflicting events to Monday morning.", "label": "agentic"}
+{"text": "Create a new Jira ticket for the bug where the login button doesn't work, and assign it to the frontend lead.", "label": "agentic"}
+{"text": "Retrieve the server logs from the staging environment, parse them to find any database timeout errors, and export the results to a CSV file.", "label": "agentic"}
+{"text": "Deploy the latest commit from the dev branch to our staging cluster and trigger the end-to-end test suite.", "label": "agentic"}
+{"text": "Post a tweet announcing the launch of our new product features, using the text from the draft in my notes.", "label": "agentic"}
+{"text": "Scan my inbox for any emails from clients requesting refunds, compile a list of their order IDs, and update our CRM database.", "label": "agentic"}
+{"text": "Create a new repository on GitHub named 'project-alpha', push the local codebase, and enable branch protection for the main branch.", "label": "agentic"}
+{"text": "Monitor the CPU usage of our production database for the next hour, and ping me on Discord if it exceeds 90%.", "label": "agentic"}
+{"text": "Find all broken links on our company website home page, compile them into a list, and email the list to the webmaster.", "label": "agentic"}
+{"text": "Write a Python script that scrapes the top 10 articles from news.ycombinator.com, save the titles to a text file, and run it.", "label": "agentic"}
+{"text": "Add a task to my Todoist list called 'Prepare presentation' with a due date of next Thursday, and set a reminder for 9 AM.", "label": "agentic"}
+{"text": "Look up the weather forecast for Chicago this weekend, and if there is rain predicted, cancel my tee time at the golf course.", "label": "agentic"}
+{"text": "Log into the AWS console, terminate the unused EC2 instances running in the us-west-2 region, and report the savings.", "label": "agentic"}
+{"text": "Draft a response to the customer complaint ticket #1024 based on our refund policy, and submit it for manager approval.", "label": "agentic"}
+{"text": "Download the attached PDF invoice from my latest email, extract the total amount due, and log it into our accounting software.", "label": "agentic"}
+{"text": "Set up a Google Meet event for the project kickoff tomorrow at 10 AM, and share the link with the general channel on Slack.", "label": "agentic"}
+{"text": "Run a vulnerability scan on our web application, filter for high-severity issues, and create GitHub issues for each of them.", "label": "agentic"}
+{"text": "Search for hotels in downtown San Francisco under $200 a night for September 12-14, and book the one with the best ratings.", "label": "agentic"}
+{"text": "Create a automated reminder that sends a message to the team Slack channel every Friday at 4 PM asking for status updates.", "label": "agentic"}
+{"text": "Get the current exchange rate between USD and EUR, calculate the conversion for $5000, and update the invoice amount in our system.", "label": "agentic"}
+{"text": "Write a script to automate the backup of our PostgreSQL database to an S3 bucket, and schedule it to run every night at midnight.", "label": "agentic"}
+{"text": "Find the contact information for the authors of the paper 'Attention is All You Need', and send them a brief email inquiry.", "label": "agentic"}
+{"text": "Update the price of the 'Premium Subscription' package to $49/month across all our active payment gateways (Stripe, PayPal, Adyen).", "label": "agentic"}
+{"text": "Generate a monthly invoice for client 'Acme Corp' based on their usage hours tracked in Toggl, and email it to their accounts department.", "label": "agentic"}
+{"text": "Check if the domain 'mycoolstartupidea.com' is available for purchase, and if so, register it and set up basic DNS records.", "label": "agentic"}
+{"text": "Write a script to clean up old Docker images on the build server that haven't been used in 30 days, and execute it.", "label": "agentic"}
+{"text": "Check my unread messages on Slack, summarize any action items directed at me, and append them to my daily note in Notion.", "label": "agentic"}
+{"text": "Query the sales database for all transactions over $1000 in the last 30 days, and format the output into a PDF report.", "label": "agentic"}
+{"text": "Create a new Trello card under the 'To Do' column with the title 'Review design mockups' and attach the files from my desktop.", "label": "agentic"}
+{"text": "Find the latest release version of the Kubernetes helm chart for Prometheus, and upgrade our cluster deployment to that version.", "label": "agentic"}
+{"text": "Draft a newsletter email in Mailchimp using our standard template, insert the latest blog post link, and schedule it for Tuesday morning.", "label": "agentic"}
+{"text": "Set up a webhook to notify our team channel whenever a new user signs up on our platform.", "label": "agentic"}
+{"text": "Write a python program to test the latency of our API endpoints, run the tests 100 times, and generate a line chart of the results.", "label": "agentic"}
+{"text": "Find the location of the nearest Starbucks, calculate the driving time from my current location, and order a grande latte for pickup.", "label": "agentic"}
+{"text": "Update the employee directory with the new job titles and departments listed in the attached spreadsheet.", "label": "agentic"}
+{"text": "Create a playlist on Spotify called 'Focus Beats' and add the top 20 instrumental tracks from my recently played list.", "label": "agentic"}
+{"text": "Monitor the status of our payment gateway API, and if it returns a 5xx error code, automatically switch traffic to the backup gateway.", "label": "agentic"}
+{"text": "Extract the text from the scanned image of the receipt, categorize the expenses, and submit an expense report in Concur.", "label": "agentic"}
+{"text": "Create a new user account in Active Directory for the new employee 'John Doe' and assign them to the engineering group.", "label": "agentic"}
+{"text": "Write a script to sync files from our local server to a backup external drive, and execute the initial sync now.", "label": "agentic"}
+{"text": "Check the status of my package delivery from FedEx, and if it is delayed, file a customer inquiry form.", "label": "agentic"}
+{"text": "Add the new leads from our landing page sign-up form to our Mailchimp subscriber list, tagging them as 'Webinar'.", "label": "agentic"}
+{"text": "Query the database to find all users who haven't logged in for 90 days, and send them a re-engagement email with a discount code.", "label": "agentic"}
+{"text": "Write a python script to resize all images in the assets folder to 800x600 pixels, and run it on the local directory.", "label": "agentic"}
+{"text": "Find the cheapest flights from New York to London for the upcoming Thanksgiving weekend, and track the prices over the next week.", "label": "agentic"}
+{"text": "Configure our CI/CD pipeline to run linting and unit tests on every pull request, and block merging if any tests fail.", "label": "agentic"}
+{"text": "Generate a unique QR code for the URL 'https://example.com/promo' and save it to the marketing assets folder.", "label": "agentic"}
+{"text": "Brainstorm 10 creative name ideas for a new eco-friendly coffee brand.", "label": "open_ended"}
+{"text": "Write a short story about a lighthouse keeper who begins receiving mysterious messages in Morse code from the ocean.", "label": "open_ended"}
+{"text": "Give me some career advice on how to transition from marketing into software engineering.", "label": "open_ended"}
+{"text": "How can I design a scalable and highly available microservices architecture for an e-commerce website?", "label": "open_ended"}
+{"text": "Draft a polite response to a client explaining why we need to push back the project deadline by two weeks.", "label": "open_ended"}
+{"text": "Explain the concept of quantum computing in simple terms that a ten-year-old could understand.", "label": "open_ended"}
+{"text": "What are some fun and educational science experiments I can do at home with my elementary school kids?", "label": "open_ended"}
+{"text": "Write a python function to find the longest common subsequence of two strings, and explain how the algorithm works.", "label": "open_ended"}
+{"text": "Provide some tips for managing stress and maintaining a healthy work-life balance while working remotely.", "label": "open_ended"}
+{"text": "Create a weekly meal prep plan for a vegetarian diet that focuses on high-protein meals and takes less than 2 hours to cook.", "label": "open_ended"}
+{"text": "Draft an outline for a 45-minute presentation on the future of artificial intelligence in healthcare.", "label": "open_ended"}
+{"text": "What are the key pros and cons of using a SQL database versus a NoSQL database for a real-time messaging application?", "label": "open_ended"}
+{"text": "Write a poem about the transition from autumn to winter, focusing on themes of quietness and reflection.", "label": "open_ended"}
+{"text": "How do I start a podcast on a budget? What equipment and software do I need to get started?", "label": "open_ended"}
+{"text": "Brainstorm a list of feature ideas for a mobile app designed to help neighbors share gardening tools.", "label": "open_ended"}
+{"text": "Write a script for a 2-minute promotional video introducing a new productivity app for students.", "label": "open_ended"}
+{"text": "What are the best practices for designing a user-friendly navigation menu for a complex enterprise SaaS product?", "label": "open_ended"}
+{"text": "Explain the differences between machine learning, deep learning, and artificial intelligence using clear analogies.", "label": "open_ended"}
+{"text": "Write a motivational speech for a high school sports team that has lost three games in a row.", "label": "open_ended"}
+{"text": "What are some effective strategies for learning a new foreign language quickly when you can't travel to that country?", "label": "open_ended"}
+{"text": "Describe a fictional fantasy city built entirely on the back of a giant sleeping turtle, focusing on its architecture and daily life.", "label": "open_ended"}
+{"text": "How can I optimize the performance of a React application that is rendering large lists of data dynamically?", "label": "open_ended"}
+{"text": "Provide a list of brainstorming prompts to help a writer overcome writer's block for a mystery novel.", "label": "open_ended"}
+{"text": "What are some creative ways to style a small studio apartment to make it feel more spacious and organized?", "label": "open_ended"}
+{"text": "Draft a job description for a Senior Product Designer role, highlighting the need for strong user research skills.", "label": "open_ended"}
+{"text": "Explain how the blockchain works without using technical jargon like cryptography, hashes, or blocks.", "label": "open_ended"}
+{"text": "Write a customer service response template for handling customers who are angry about a service outage.", "label": "open_ended"}
+{"text": "How can a small business owner leverage social media marketing to grow their local customer base without spending money on ads?", "label": "open_ended"}
+{"text": "Create a workout routine for someone who wants to improve their core strength and flexibility, using only bodyweight exercises.", "label": "open_ended"}
+{"text": "What are the main themes of Shakespeare's Macbeth, and how do they relate to modern political power struggles?", "label": "open_ended"}
+{"text": "Write a step-by-step guide on how to conduct a user interview to gather feedback on a new product prototype.", "label": "open_ended"}
+{"text": "Brainstorm 5 unique gift ideas for a colleague who is retiring after 20 years with the company.", "label": "open_ended"}
+{"text": "How can I refactor a legacy codebase to introduce unit testing without breaking existing functionality?", "label": "open_ended"}
+{"text": "Describe a new team building activity that is collaborative, works well over Zoom, and takes less than 30 minutes.", "label": "open_ended"}
+{"text": "Write an introductory paragraph for an academic essay discussing the impact of social media on teenage mental health.", "label": "open_ended"}
+{"text": "What are some healthy habit-building techniques that can help me stay focused and avoid procrastinating on big projects?", "label": "open_ended"}
+{"text": "Create a character profile for a detective in a noir novel, including their background, personality flaws, and signature style.", "label": "open_ended"}
+{"text": "How can we design a city's public transit system to be more accessible for individuals with disabilities?", "label": "open_ended"}
+{"text": "Draft a letter to a landlord requesting a rent reduction due to ongoing maintenance issues in the apartment.", "label": "open_ended"}
+{"text": "Explain the concept of 'technical debt' to a business stakeholder who wants to ship features as fast as possible.", "label": "open_ended"}
+{"text": "What are some creative ways to teach kids about financial literacy and the value of saving money?", "label": "open_ended"}
+{"text": "Write a review of a fictional restaurant that serves fusion food combining traditional Italian and Japanese cuisines.", "label": "open_ended"}
+{"text": "How can an engineering team establish a strong culture of peer code review and constructive feedback?", "label": "open_ended"}
+{"text": "Brainstorm 10 blog post topics for a travel agency that specializes in eco-tourism and sustainable travel.", "label": "open_ended"}
+{"text": "Describe the sensory experience of walking through a bustling street market in Marrakech, Morocco.", "label": "open_ended"}
+{"text": "What are the most important factors to consider when deciding whether to bootstrap a startup or seek venture capital?", "label": "open_ended"}
+{"text": "Write a pitch deck outline for a startup that is building a smart water bottle that tracks hydration levels.", "label": "open_ended"}
+{"text": "How do I set up a continuous integration pipeline for a Node.js project using GitHub Actions?", "label": "open_ended"}
+{"text": "Provide some advice on how to handle a situation where two of your team members have a personal conflict.", "label": "open_ended"}
+{"text": "Write a song lyric about the feeling of standing in a crowded room but feeling completely alone.", "label": "open_ended"}

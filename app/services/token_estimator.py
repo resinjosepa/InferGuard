@@ -1,52 +1,61 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
-# Approximate tokens per word.
-# This is intentionally conservative rather than pretending
-# that word count equals exact tokenizer output.
-TOKENS_PER_WORD = 1.3
+from app.services.tokenizer_service import count_tokens
 
-# Expected output-token multipliers by workflow.
-# These are initial heuristics and will be calibrated later
-# using real execution data.
-WORKFLOW_OUTPUT_MULTIPLIERS = {
-    "simple": 1.0,
-    "rag": 2.5,
-    "multi_hop": 4.0,
-    "agentic": 6.0,
-    "open_ended": 8.0,
-}
 
-@dataclass
-class TokenEstimate:
+class TokenEstimate(BaseModel):
     input_tokens: int
     output_tokens: int
     total_tokens: int
+    confidence: float
+
 
 def estimate_tokens(
     prompt: str,
     workflow_type: str,
+    model_name: str = "gpt-5.6",
+    max_output_tokens: int | None = None,
 ) -> TokenEstimate:
-    word_count = len(prompt.split())
 
-    input_tokens = max(
-        1,
-        round(word_count * TOKENS_PER_WORD),
+    exact_input_tokens = count_tokens(
+        prompt,
+        model_name,
     )
 
-    multiplier = WORKFLOW_OUTPUT_MULTIPLIERS.get(
+    if exact_input_tokens is not None:
+        input_tokens = exact_input_tokens
+        confidence = 1.0
+    else:
+        # Fallback approximation when the
+        # model tokenizer is unavailable.
+        input_tokens = max(
+            1,
+            round(len(prompt.split()) * 1.3),
+        )
+        confidence = 0.5
+
+    output_estimates = {
+        "simple": 8,
+        "rag": 40,
+        "multi_hop": 80,
+        "agentic": 120,
+        "open_ended": 100,
+    }
+
+    output_tokens = output_estimates.get(
         workflow_type,
-        2.0,
+        50,
     )
 
-    output_tokens = max(
-        1,
-        round(input_tokens * multiplier),
-    )
-
-    total_tokens = input_tokens + output_tokens
+    if max_output_tokens is not None:
+        output_tokens = min(
+            output_tokens,
+            max_output_tokens,
+        )
 
     return TokenEstimate(
         input_tokens=input_tokens,
         output_tokens=output_tokens,
-        total_tokens=total_tokens,
+        total_tokens=input_tokens + output_tokens,
+        confidence=confidence,
     )

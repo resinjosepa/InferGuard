@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.models.request import AnalyzeRequest
 from app.services import create_context
+from app.services.workflow_service import predict_workflow
 
 app = FastAPI(
     title="InferGuard",
@@ -19,4 +20,11 @@ def read_root():
 
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):
-    return create_context(request)
+    context = create_context(request)
+    prediction, confidence = predict_workflow(request.prompt)
+    
+    # Ensure any NumPy strings are converted to Python standard string representation
+    context.workflow_type = str(prediction)
+    context.complexity_confidence = float(confidence)
+    
+    return context

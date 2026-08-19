@@ -8,4 +8,7 @@ class UsageRecord(BaseModel):
     predicted_output_tokens: int
     actual_output_tokens: int
     reasoning_tokens: int | None = None
+    predicted_cost: float | None = None
+    actual_cost: float | None = None
+    cost_error: float | None = None
     max_output_tokens: int | None = None

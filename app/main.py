@@ -5,6 +5,7 @@ from app.services import create_context
 from app.services.workflow_service import predict_workflow
 from app.services.token_estimator import estimate_tokens
 from app.services.llm_service import generate_response
+from app.services.llm_service import log_actual_usage
 from app.services.cost_service import calculate_cost
 
 app = FastAPI(
@@ -67,6 +68,18 @@ def analyze(request: AnalyzeRequest):
         reasoning_tokens=response.reasoning_tokens or 0,
     )
 
+    cost_error = actual_cost - estimated_cost
+
+    log_actual_usage(
+        response,
+        model_name=request.model,
+        workflow_type=context.workflow_type,
+        predicted_output_tokens=token_estimate.output_tokens,
+        predicted_cost=estimated_cost,
+        actual_cost=actual_cost,
+        max_output_tokens=request.max_output_tokens,
+    )
+
     # 4. Return actual model response
     return {
         "request_id": context.request_id,
@@ -79,8 +92,10 @@ def analyze(request: AnalyzeRequest):
         "predicted_output_tokens": token_estimate.output_tokens,
         "estimated_cost": estimated_cost,
         "actual_cost": actual_cost,
+        "cost_error": cost_error,
         "actual_input_tokens": response.input_tokens,
         "actual_output_tokens": response.output_tokens,
+        "actual_reasoning_tokens": response.reasoning_tokens,
         "actual_total_tokens": response.total_tokens,
         "response": response.text,
     }

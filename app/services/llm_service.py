@@ -89,14 +89,6 @@ def generate_response(
         reasoning_tokens=reasoning_tokens,
     )
 
-    log_actual_usage(
-        result,
-        model_name=model_name,
-        workflow_type=workflow_type,
-        predicted_output_tokens=predicted_output_tokens,
-        max_output_tokens=max_output_tokens,
-    )
-
     return result
 
     
@@ -106,6 +98,8 @@ def log_actual_usage(
     model_name: str,
     workflow_type: str,
     predicted_output_tokens: int,
+    predicted_cost: float | None = None,
+    actual_cost: float | None = None,
     max_output_tokens: int | None = None,
 ) -> None:
     if response.input_tokens is None or response.output_tokens is None:
@@ -118,6 +112,13 @@ def log_actual_usage(
         predicted_output_tokens=predicted_output_tokens,
         actual_output_tokens=response.output_tokens,
         reasoning_tokens=response.reasoning_tokens,
+        predicted_cost=predicted_cost,
+        actual_cost=actual_cost,
+        cost_error=(
+            actual_cost - predicted_cost
+            if actual_cost is not None and predicted_cost is not None
+            else None
+        ),
         max_output_tokens=max_output_tokens,
     )
 

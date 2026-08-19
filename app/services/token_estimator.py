@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from app.services.tokenizer_service import count_tokens
+from app.core.model_registry import get_model_pricing
 
 
 class TokenEstimate(BaseModel):
@@ -8,6 +9,9 @@ class TokenEstimate(BaseModel):
     output_tokens: int
     total_tokens: int
     confidence: float
+
+
+BASE_OUTPUT_TOKENS = 8
 
 
 def estimate_tokens(
@@ -26,26 +30,25 @@ def estimate_tokens(
         input_tokens = exact_input_tokens
         confidence = 1.0
     else:
-        # Fallback approximation when the
-        # model tokenizer is unavailable.
         input_tokens = max(
             1,
             round(len(prompt.split()) * 1.3),
         )
         confidence = 0.5
 
-    output_estimates = {
-        "simple": 8,
-        "rag": 40,
-        "multi_hop": 80,
-        "agentic": 120,
-        "open_ended": 100,
-    }
+    pricing = get_model_pricing(model_name)
 
-    output_tokens = output_estimates.get(
-        workflow_type,
-        50,
-    )
+    if pricing is None:
+        output_tokens = 50
+    else:
+        multiplier = pricing.output_multipliers.get(
+            workflow_type,
+            1.0,
+        )
+
+        output_tokens = round(
+            BASE_OUTPUT_TOKENS * multiplier
+        )
 
     if max_output_tokens is not None:
         output_tokens = min(

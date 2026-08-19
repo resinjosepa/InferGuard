@@ -1,12 +1,13 @@
-from app.models.pricing import ModelPricing
+from app.models.pricing import (
+    ModelPricing,
+    GPT_5_6_PRICING,
+    GEMINI_3_5_FLASH_PRICING,
+)
 
 
 MODEL_REGISTRY: dict[str, ModelPricing] = {
-    "gpt-5.6": ModelPricing(
-        model_name="gpt-5.6",
-        input_price_per_1m=5.0,
-        output_price_per_1m=30.0,
-    ),
+    "gpt-5.6": GPT_5_6_PRICING,
+    "gemini-3.5-flash": GEMINI_3_5_FLASH_PRICING,
 }
 
 

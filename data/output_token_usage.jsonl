@@ -1,0 +1,5 @@
+{"model": "gemini-3.5-flash", "workflow_type": "simple", "input_tokens": 7, "predicted_output_tokens": 8, "actual_output_tokens": 1, "max_output_tokens": 30}
+{"model": "gemini-3.5-flash", "workflow_type": "simple", "input_tokens": 7, "predicted_output_tokens": 8, "actual_output_tokens": 1, "max_output_tokens": 30}
+{"model": "gemini-3.5-flash", "workflow_type": "simple", "input_tokens": 7, "predicted_output_tokens": 8, "actual_output_tokens": 1, "max_output_tokens": 30}
+{"model": "gemini-3.5-flash", "workflow_type": "simple", "input_tokens": 7, "predicted_output_tokens": 8, "actual_output_tokens": 1, "reasoning_tokens": 25, "max_output_tokens": 30}
+{"model": "gemini-3.5-flash", "workflow_type": "simple", "input_tokens": 7, "predicted_output_tokens": 8, "actual_output_tokens": 1, "reasoning_tokens": 25, "max_output_tokens": 30}

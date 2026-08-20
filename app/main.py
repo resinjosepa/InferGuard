@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.models import context
 from app.models.request import AnalyzeRequest
 from app.services import create_context
@@ -7,6 +8,7 @@ from app.services.token_estimator import estimate_tokens
 from app.services.llm_service import generate_response
 from app.services.llm_service import log_actual_usage
 from app.services.cost_service import calculate_cost
+from app.services.dashboard_service import get_dashboard_stats
 
 app = FastAPI(
     title="InferGuard",
@@ -14,6 +16,13 @@ app = FastAPI(
     version="0.1.0",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -22,6 +31,9 @@ def read_root():
         "status": "healthy"
     }
 
+@app.get("/dashboard/stats")
+def dashboard_stats():
+    return get_dashboard_stats()
 
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):

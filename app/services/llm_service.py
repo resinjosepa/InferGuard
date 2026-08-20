@@ -1,6 +1,5 @@
 import os
 from dataclasses import dataclass
-from urllib import response
 
 from dotenv import load_dotenv
 from google import genai
@@ -19,6 +18,7 @@ class LLMResponse:
     output_tokens: int | None
     total_tokens: int | None
     reasoning_tokens: int | None
+
 
 _api_key = os.getenv("GEMINI_API_KEY")
 
@@ -91,10 +91,10 @@ def generate_response(
 
     return result
 
-    
 
 def log_actual_usage(
     response: LLMResponse,
+    user_id: str,
     model_name: str,
     workflow_type: str,
     predicted_output_tokens: int,
@@ -102,10 +102,12 @@ def log_actual_usage(
     actual_cost: float | None = None,
     max_output_tokens: int | None = None,
 ) -> None:
+
     if response.input_tokens is None or response.output_tokens is None:
         return
 
     record = UsageRecord(
+        user_id=user_id,
         model=model_name,
         workflow_type=workflow_type,
         input_tokens=response.input_tokens,

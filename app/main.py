@@ -9,6 +9,7 @@ from app.services.llm_service import generate_response
 from app.services.llm_service import log_actual_usage
 from app.services.cost_service import calculate_cost
 from app.services.dashboard_service import get_dashboard_stats
+from app.services.guardrail_service import check_cost_guardrail
 
 app = FastAPI(
     title="InferGuard",
@@ -64,7 +65,33 @@ def analyze(request: AnalyzeRequest):
 
     context.estimated_cost = estimated_cost
 
-    # 3. Call the selected LLM
+    # 3. Apply cost guardrail
+    max_cost = 0.002
+
+    guardrail = check_cost_guardrail(
+        predicted_cost=estimated_cost,
+        max_cost=max_cost,
+    )
+
+    if guardrail.action == "BLOCK":
+        return {
+            "request_id": context.request_id,
+            "user_id": context.user_id,
+            "prompt": context.prompt,
+            "model": request.model,
+            "workflow_type": context.workflow_type,
+            "workflow_confidence": context.complexity_confidence,
+            "predicted_input_tokens": token_estimate.input_tokens,
+            "predicted_output_tokens": token_estimate.output_tokens,
+            "estimated_cost": estimated_cost,
+            "guardrail_action": guardrail.action,
+            "guardrail_reason": guardrail.reason,
+            "guardrail_threshold": guardrail.threshold,
+            "blocked": True,
+            "response": None,
+        }
+
+    # 4. Call the selected LLM
     response = generate_response(
         prompt=request.prompt,
         model_name=request.model,
@@ -84,6 +111,7 @@ def analyze(request: AnalyzeRequest):
 
     log_actual_usage(
         response,
+        user_id=request.user_id,
         model_name=request.model,
         workflow_type=context.workflow_type,
         predicted_output_tokens=token_estimate.output_tokens,
@@ -92,7 +120,7 @@ def analyze(request: AnalyzeRequest):
         max_output_tokens=request.max_output_tokens,
     )
 
-    # 4. Return actual model response
+    # 5. Return actual model response
     return {
         "request_id": context.request_id,
         "user_id": context.user_id,
@@ -110,4 +138,8 @@ def analyze(request: AnalyzeRequest):
         "actual_reasoning_tokens": response.reasoning_tokens,
         "actual_total_tokens": response.total_tokens,
         "response": response.text,
+        "guardrail_action": guardrail.action,
+        "guardrail_reason": guardrail.reason,
+        "guardrail_threshold": guardrail.threshold,
+        "blocked": False,
     }

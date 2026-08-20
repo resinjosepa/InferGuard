@@ -21,6 +21,7 @@ def estimate_tokens(
     max_output_tokens: int | None = None,
 ) -> TokenEstimate:
 
+    # 1. Estimate input tokens
     exact_input_tokens = count_tokens(
         prompt,
         model_name,
@@ -36,25 +37,28 @@ def estimate_tokens(
         )
         confidence = 0.5
 
+    # 2. Get workflow complexity multiplier
     pricing = get_model_pricing(model_name)
 
     if pricing is None:
-        output_tokens = 50
+        multiplier = 1.0
     else:
         multiplier = pricing.output_multipliers.get(
             workflow_type,
             1.0,
         )
 
+    # 3. Estimate output tokens
+    if max_output_tokens is not None:
+        # max_output_tokens is already the user's requested
+        # output budget. Never multiply it by workflow complexity.
+        output_tokens = max_output_tokens
+    else:
         output_tokens = round(
             BASE_OUTPUT_TOKENS * multiplier
         )
 
-    if max_output_tokens is not None:
-        output_tokens = min(
-            output_tokens,
-            max_output_tokens,
-        )
+    output_tokens = max(1, output_tokens)
 
     return TokenEstimate(
         input_tokens=input_tokens,

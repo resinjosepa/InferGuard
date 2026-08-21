@@ -1,25 +1,29 @@
-function RecentRequests({ requests, hideHeader = false }) {
+function RecentRequests({ requests, setActivePage }) {
+  const recentRequests = requests.slice(0, 5);
+
   return (
     <section className="panel requests-panel">
-
-      {!hideHeader && (
-        <div className="panel-header">
-          <div>
-            <h3>Recent Requests</h3>
-            <p>Latest LLM inference activity</p>
-          </div>
+      <div className="panel-header">
+        <div>
+          <h3>Recent Requests</h3>
+          <p>Latest LLM inference activity</p>
         </div>
-      )}
 
-      {requests.length === 0 ? (
+        <button
+          onClick={() => setActivePage("requests")}
+          className="view-all-button"
+        >
+          View all →
+        </button>
+      </div>
+
+      {recentRequests.length === 0 ? (
         <div className="empty-state">
-          No requests recorded yet.
+          <p>No requests recorded yet.</p>
         </div>
       ) : (
         <div className="table-wrapper">
-
           <table>
-
             <thead>
               <tr>
                 <th>MODEL</th>
@@ -33,14 +37,10 @@ function RecentRequests({ requests, hideHeader = false }) {
             </thead>
 
             <tbody>
-
-              {requests.map((request, index) => (
+              {recentRequests.map((request, index) => (
                 <tr key={index}>
-
                   <td>
-                    <code>
-                      {request.model}
-                    </code>
+                    <code>{request.model}</code>
                   </td>
 
                   <td>
@@ -49,38 +49,25 @@ function RecentRequests({ requests, hideHeader = false }) {
                     </span>
                   </td>
 
-                  <td>
-                    {request.input_tokens}
-                  </td>
+                  <td>{request.input_tokens}</td>
 
-                  <td>
-                    {request.predicted_output_tokens}
-                  </td>
+                  <td>{request.predicted_output_tokens}</td>
 
-                  <td>
-                    {request.actual_output_tokens}
-                  </td>
+                  <td>{request.actual_output_tokens}</td>
 
-                  <td>
-                    {request.reasoning_tokens ?? "-"}
-                  </td>
+                  <td>{request.reasoning_tokens ?? "-"}</td>
 
                   <td>
                     {request.actual_cost != null
                       ? `$${request.actual_cost.toFixed(6)}`
                       : "-"}
                   </td>
-
                 </tr>
               ))}
-
             </tbody>
-
           </table>
-
         </div>
       )}
-
     </section>
   );
 }

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.models import context
 from app.models.request import AnalyzeRequest
@@ -9,7 +10,14 @@ from app.services.llm_service import generate_response
 from app.services.llm_service import log_actual_usage
 from app.services.cost_service import calculate_cost
 from app.services.dashboard_service import get_dashboard_stats
-from app.services.guardrail_service import check_cost_guardrail
+from app.services.guardrail_service import (
+    check_cost_guardrail,
+    get_max_cost,
+    set_max_cost,
+)
+
+class GuardrailConfig(BaseModel):
+    max_cost: float
 
 app = FastAPI(
     title="InferGuard",
@@ -35,6 +43,25 @@ def read_root():
 @app.get("/dashboard/stats")
 def dashboard_stats():
     return get_dashboard_stats()
+
+@app.get("/guardrails/config")
+def get_guardrail_config():
+    max_cost = get_max_cost()
+
+    return {
+        "max_cost": max_cost,
+        "warning_threshold": max_cost * 0.8,
+    }
+
+
+@app.put("/guardrails/config")
+def update_guardrail_config(config: GuardrailConfig):
+    max_cost = set_max_cost(config.max_cost)
+
+    return {
+        "max_cost": max_cost,
+        "warning_threshold": max_cost * 0.8,
+    }
 
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):
@@ -66,7 +93,7 @@ def analyze(request: AnalyzeRequest):
     context.estimated_cost = estimated_cost
 
     # 3. Apply cost guardrail
-    max_cost = 0.002
+    max_cost = get_max_cost()
 
     guardrail = check_cost_guardrail(
         predicted_cost=estimated_cost,

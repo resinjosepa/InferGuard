@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Sidebar from "./components/Sidebar";
 import Overview from "./pages/Overview";
@@ -9,31 +9,169 @@ import "./App.css";
 
 const API_URL = "http://127.0.0.1:8000";
 
+
+/* =========================================================
+   API helper
+   ========================================================= */
+
+async function apiFetch(path, options = {}) {
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    cache: "no-store",
+    headers: {
+      ...(options.headers || {}),
+      "Cache-Control": "no-cache",
+    },
+  });
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      data?.detail ||
+        `Backend returned ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+
+/* =========================================================
+   App
+   ========================================================= */
+
 function App() {
   const [activePage, setActivePage] = useState("overview");
 
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch(`${API_URL}/dashboard/stats`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Backend returned ${response.status}`);
-        }
+  /*
+   * Analyzer state lives here.
+   * This means the prompt/result survives navigation.
+   */
+  const [analyzerPrompt, setAnalyzerPrompt] = useState("");
+  const [analyzerModel, setAnalyzerModel] =
+    useState("gemini-3.5-flash");
+  const [analyzerMaxOutputTokens, setAnalyzerMaxOutputTokens] =
+    useState(256);
 
-        return response.json();
-      })
-      .then((data) => {
-        setStats(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+  const [analyzerResult, setAnalyzerResult] = useState(null);
+  const [analyzerLoading, setAnalyzerLoading] = useState(false);
+  const [analyzerError, setAnalyzerError] = useState(null);
+
+
+  /* =========================================================
+     Dashboard stats
+     ========================================================= */
+
+  const refreshStats = useCallback(async () => {
+    try {
+      setRefreshing(true);
+      setError(null);
+
+      const data = await apiFetch("/dashboard/stats");
+
+      setStats(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRefreshing(false);
+      setLoading(false);
+    }
   }, []);
+
+
+  useEffect(() => {
+    refreshStats();
+  }, [refreshStats]);
+
+
+  /* =========================================================
+     Analyze request
+     ========================================================= */
+
+  const analyzeRequest = async () => {
+    if (!analyzerPrompt.trim()) {
+      setAnalyzerError(
+        "Enter a prompt before analyzing."
+      );
+      return;
+    }
+
+    try {
+      setAnalyzerLoading(true);
+      setAnalyzerError(null);
+
+      const data = await apiFetch("/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: "dashboard-user",
+          prompt: analyzerPrompt,
+          model: analyzerModel,
+          max_output_tokens: Number(
+            analyzerMaxOutputTokens
+          ),
+        }),
+      });
+
+      /*
+       * IMPORTANT:
+       * Keep the prompt separately in analyzerPrompt.
+       * Keep the complete backend result separately.
+       */
+      setAnalyzerResult(data);
+
+      /*
+       * Refresh request/cost statistics after
+       * a successful inference.
+       */
+      await refreshStats();
+    } catch (err) {
+      setAnalyzerError(err.message);
+    } finally {
+      setAnalyzerLoading(false);
+    }
+  };
+
+
+  /* =========================================================
+     Loading
+     ========================================================= */
+
+  if (loading) {
+    return (
+      <div className="app">
+        <Sidebar
+          activePage={activePage}
+          setActivePage={setActivePage}
+        />
+
+        <main className="main">
+          <div className="page-loading">
+            Loading InferGuard...
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+
+  /* =========================================================
+     Main application
+     ========================================================= */
 
   return (
     <div className="app">
@@ -44,45 +182,81 @@ function App() {
 
       <main className="main">
 
-        {loading && (
-          <div className="page-loading">
-            Loading InferGuard...
-          </div>
-        )}
-
-        {!loading && error && (
+        {error && (
           <div className="page-error">
             <h2>Unable to connect to InferGuard</h2>
+
             <p>{error}</p>
-            <p>
-              Make sure the FastAPI backend is running on port 8000.
-            </p>
+
+            <button onClick={refreshStats}>
+              Retry
+            </button>
           </div>
         )}
 
-        {!loading && !error && stats && (
+
+        {!error && stats && (
           <>
+
             {activePage === "overview" && (
               <Overview
+                stats={stats}
+                refreshStats={refreshStats}
+                refreshing={refreshing}
                 setActivePage={setActivePage}
+
+                analyzerPrompt={analyzerPrompt}
+                setAnalyzerPrompt={setAnalyzerPrompt}
+
+                analyzerModel={analyzerModel}
+                setAnalyzerModel={setAnalyzerModel}
+
+                analyzerMaxOutputTokens={
+                  analyzerMaxOutputTokens
+                }
+
+                setAnalyzerMaxOutputTokens={
+                  setAnalyzerMaxOutputTokens
+                }
+
+                analyzerResult={analyzerResult}
+                setAnalyzerResult={setAnalyzerResult}
+
+                analyzerLoading={analyzerLoading}
+                analyzerError={analyzerError}
+
+                analyzeRequest={analyzeRequest}
               />
             )}
 
+
             {activePage === "requests" && (
-              <Requests stats={stats} />
+              <Requests
+                stats={stats}
+                onRefresh={refreshStats}
+                refreshing={refreshing}
+              />
             )}
+
 
             {activePage === "cost" && (
-              <CostAnalytics stats={stats} />
+              <CostAnalytics
+                stats={stats}
+              />
             )}
 
+
             {activePage === "guardrails" && (
-              <Guardrails />
+              <Guardrails
+                onConfigChanged={refreshStats}
+              />
             )}
+
 
             {activePage === "models" && (
               <Models />
             )}
+
           </>
         )}
 
@@ -93,52 +267,79 @@ function App() {
 
 
 /* =========================================================
-   Guardrails Page
+   Guardrails
    ========================================================= */
 
-function Guardrails() {
-  const [maxCost, setMaxCost] = useState("");
-  const [warningThreshold, setWarningThreshold] = useState(0);
+function Guardrails({ onConfigChanged }) {
+
+  const [maxCost, setMaxCost] = useState(null);
+
+  const [warningThreshold, setWarningThreshold] =
+    useState(null);
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
-  const loadConfig = async () => {
+
+  /* =========================================================
+     Load configuration from backend
+     ========================================================= */
+
+  const loadConfig = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(
-        `${API_URL}/guardrails/config`
+      /*
+       * Always ask the backend for the current value.
+       * No frontend default is used.
+       */
+      const data = await apiFetch(
+        `/guardrails/config?t=${Date.now()}`
       );
 
-      if (!response.ok) {
-        throw new Error(
-          `Backend returned ${response.status}`
-        );
-      }
+      setMaxCost(Number(data.max_cost));
 
-      const data = await response.json();
+      setWarningThreshold(
+        Number(data.warning_threshold)
+      );
 
-      setMaxCost(data.max_cost);
-      setWarningThreshold(data.warning_threshold);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    loadConfig();
   }, []);
 
+
+  /*
+   * Load every time this component is mounted.
+   *
+   * Since App only renders Guardrails when
+   * activePage === "guardrails", navigating away
+   * and coming back mounts it again and fetches
+   * the current backend configuration.
+   */
+  useEffect(() => {
+    loadConfig();
+  }, [loadConfig]);
+
+
+  /* =========================================================
+     Save configuration
+     ========================================================= */
+
   const saveConfig = async () => {
+
     const value = Number(maxCost);
 
-    if (!value || value <= 0) {
-      setError("Maximum cost must be greater than 0.");
+    if (!Number.isFinite(value) || value <= 0) {
+      setError(
+        "Maximum cost must be greater than 0."
+      );
       return;
     }
 
@@ -147,37 +348,59 @@ function Guardrails() {
       setError(null);
       setMessage(null);
 
-      const response = await fetch(
-        `${API_URL}/guardrails/config`,
+      const data = await apiFetch(
+        "/guardrails/config",
         {
           method: "PUT",
+
           headers: {
             "Content-Type": "application/json",
           },
+
           body: JSON.stringify({
             max_cost: value,
           }),
         }
       );
 
-      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(
-          data.detail || `Backend returned ${response.status}`
-        );
+      /*
+       * Backend is the source of truth.
+       *
+       * Do NOT calculate the values ourselves here.
+       * Use exactly what the backend returned.
+       */
+      setMaxCost(Number(data.max_cost));
+
+      setWarningThreshold(
+        Number(data.warning_threshold)
+      );
+
+
+      setMessage(
+        "Guardrail configuration saved."
+      );
+
+
+      /*
+       * Refresh dashboard statistics after
+       * configuration changes.
+       */
+      if (onConfigChanged) {
+        await onConfigChanged();
       }
 
-      setMaxCost(data.max_cost);
-      setWarningThreshold(data.warning_threshold);
-
-      setMessage("Guardrail configuration saved.");
     } catch (err) {
       setError(err.message);
     } finally {
       setSaving(false);
     }
   };
+
+
+  /* =========================================================
+     Loading state
+     ========================================================= */
 
   if (loading) {
     return (
@@ -189,64 +412,146 @@ function Guardrails() {
     );
   }
 
+
+  /* =========================================================
+     Error state
+     ========================================================= */
+
+  if (error && maxCost === null) {
+    return (
+      <div className="page guardrails-page">
+
+        <div className="page-header">
+          <div>
+            <p className="eyebrow">
+              SAFETY & CONTROL
+            </p>
+
+            <h1>Guardrails</h1>
+
+            <p>
+              Configure spending limits that protect
+              inference requests before they reach the
+              model.
+            </p>
+          </div>
+        </div>
+
+        <div className="analyzer-error">
+          {error}
+        </div>
+
+        <button
+          className="save-guardrail-button"
+          onClick={loadConfig}
+        >
+          Retry
+        </button>
+
+      </div>
+    );
+  }
+
+
+  /* =========================================================
+     Guardrails UI
+     ========================================================= */
+
   return (
     <div className="page guardrails-page">
 
       <div className="page-header">
         <div>
-          <p className="eyebrow">SAFETY & CONTROL</p>
+
+          <p className="eyebrow">
+            SAFETY & CONTROL
+          </p>
 
           <h1>Guardrails</h1>
 
           <p>
-            Configure spending limits that protect inference
-            requests before they reach the model.
+            Configure spending limits that protect
+            inference requests before they reach the
+            model.
           </p>
+
         </div>
       </div>
+
+
+      {/* =====================================================
+          Cost protection
+          ===================================================== */}
 
       <section className="panel guardrail-config-panel">
 
         <div className="panel-header">
+
           <div>
+
             <h3>Cost Protection</h3>
 
             <p>
-              InferGuard evaluates predicted inference cost
-              before execution.
+              InferGuard evaluates predicted inference
+              cost before execution.
             </p>
+
           </div>
+
         </div>
+
 
         <div className="guardrail-form">
 
           <label>
+
             Maximum predicted cost
 
             <div className="cost-input">
+
               <span>$</span>
 
               <input
                 type="number"
                 min="0.000001"
                 step="0.000001"
-                value={maxCost}
+
+                value={
+                  maxCost !== null
+                    ? maxCost
+                    : ""
+                }
+
                 onChange={(e) => {
-                  setMaxCost(e.target.value);
+                  setMaxCost(
+                    e.target.value
+                  );
+
                   setMessage(null);
+                  setError(null);
                 }}
               />
+
             </div>
+
           </label>
+
 
           <div className="guardrail-warning">
 
             <div>
-              <span>Warning threshold</span>
+
+              <span>
+                Warning threshold
+              </span>
 
               <strong>
-                ${Number(warningThreshold).toFixed(6)}
+                $
+                {warningThreshold !== null
+                  ? warningThreshold.toFixed(6)
+                  : "0.000000"}
               </strong>
+
             </div>
 
             <span className="warning-percent">
@@ -255,21 +560,26 @@ function Guardrails() {
 
           </div>
 
+
           <button
             className="save-guardrail-button"
             onClick={saveConfig}
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save Changes"}
+            {saving
+              ? "Saving..."
+              : "Save Changes"}
           </button>
 
         </div>
+
 
         {message && (
           <div className="guardrail-success">
             {message}
           </div>
         )}
+
 
         {error && (
           <div className="analyzer-error">
@@ -280,60 +590,117 @@ function Guardrails() {
       </section>
 
 
+      {/* =====================================================
+          Current policy
+          ===================================================== */}
+
       <section className="panel">
 
         <div className="panel-header">
+
           <div>
+
             <h3>Current Policy</h3>
 
             <p>
-              Requests are classified using the configured
-              predicted-cost threshold.
+              Requests are classified using the
+              configured predicted-cost threshold.
             </p>
+
           </div>
+
         </div>
+
 
         <div className="guardrail-policy">
 
+          {/* ALLOW */}
+
           <div className="policy-row allow">
+
             <div>
-              <strong>ALLOW</strong>
+
+              <strong>
+                ALLOW
+              </strong>
+
               <span>
                 Predicted cost below warning threshold
               </span>
+
             </div>
 
             <code>
-              &lt; ${Number(warningThreshold).toFixed(6)}
+              &lt; $
+              {warningThreshold !== null
+                ? warningThreshold.toFixed(6)
+                : "0.000000"}
             </code>
+
           </div>
 
+
+          {/* WARN */}
+
           <div className="policy-row warn">
+
             <div>
-              <strong>WARN</strong>
+
+              <strong>
+                WARN
+              </strong>
+
               <span>
                 Predicted cost approaching maximum
               </span>
+
             </div>
 
             <code>
-              ${Number(warningThreshold).toFixed(6)}
+
+              $
+              {warningThreshold !== null
+                ? warningThreshold.toFixed(6)
+                : "0.000000"}
+
               {" – "}
-              ${Number(maxCost).toFixed(6)}
+
+              $
+              {maxCost !== null
+                ? Number(maxCost).toFixed(6)
+                : "0.000000"}
+
             </code>
+
           </div>
 
+
+          {/* BLOCK */}
+
           <div className="policy-row block">
+
             <div>
-              <strong>BLOCK</strong>
+
+              <strong>
+                BLOCK
+              </strong>
+
               <span>
                 Predicted cost exceeds maximum
               </span>
+
             </div>
 
             <code>
-              &gt; ${Number(maxCost).toFixed(6)}
+
+              &gt; $
+
+              {maxCost !== null
+                ? Number(maxCost).toFixed(6)
+                : "0.000000"}
+
             </code>
+
           </div>
 
         </div>
@@ -346,59 +713,95 @@ function Guardrails() {
 
 
 /* =========================================================
-   Models Page
+   Models
    ========================================================= */
 
 function Models() {
+
   return (
     <div className="page">
 
       <div className="page-header">
+
         <div>
-          <p className="eyebrow">MODEL REGISTRY</p>
+
+          <p className="eyebrow">
+            MODEL REGISTRY
+          </p>
 
           <h1>Models</h1>
 
           <p>
-            View configured inference models and pricing.
+            View configured inference models and
+            pricing.
           </p>
+
         </div>
+
       </div>
+
 
       <section className="panel">
 
         <div className="panel-header">
+
           <div>
-            <h3>Configured Models</h3>
+
+            <h3>
+              Configured Models
+            </h3>
 
             <p>
-              Models currently available to InferGuard.
+              Models currently available to
+              InferGuard.
             </p>
+
           </div>
+
         </div>
+
 
         <div className="model-list">
 
           <div className="model-row">
+
             <div>
-              <strong>gemini-3.5-flash</strong>
-              <span>Google Gemini</span>
+
+              <strong>
+                gemini-3.5-flash
+              </strong>
+
+              <span>
+                Google Gemini
+              </span>
+
             </div>
 
             <span className="model-status">
               Available
             </span>
+
           </div>
 
+
           <div className="model-row">
+
             <div>
-              <strong>gpt-5.6</strong>
-              <span>OpenAI</span>
+
+              <strong>
+                gpt-5.6
+              </strong>
+
+              <span>
+                OpenAI
+              </span>
+
             </div>
 
             <span className="model-status">
               Configured
             </span>
+
           </div>
 
         </div>

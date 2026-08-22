@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 from app.models.usage_record import UsageRecord
 from app.services.usage_logger import log_usage
@@ -25,6 +26,7 @@ _api_key = os.getenv("GEMINI_API_KEY")
 if not _api_key:
     raise RuntimeError("GEMINI_API_KEY is not configured.")
 
+
 _client = genai.Client(api_key=_api_key)
 
 
@@ -36,12 +38,21 @@ def generate_response(
     max_output_tokens: int | None = None,
 ) -> LLMResponse:
 
-    config = None
+    # Make sure the model has enough room for a useful visible answer.
+    output_limit = max(
+        max_output_tokens or 256,
+        256,
+    )
 
-    if max_output_tokens is not None:
-        config = {
-            "max_output_tokens": max_output_tokens
-        }
+    config = types.GenerateContentConfig(
+        max_output_tokens=output_limit,
+
+        # InferGuard's normal requests do not need
+        # heavy internal reasoning.
+        thinking_config=types.ThinkingConfig(
+            thinking_level="minimal"
+        ),
+    )
 
     response = _client.models.generate_content(
         model=model_name,
@@ -59,14 +70,9 @@ def generate_response(
 
     output_tokens = (
         usage.candidates_token_count
-        if usage and usage.candidates_token_count is not None
-        else (
-            usage.total_token_count - usage.prompt_token_count
-            if usage
-            and usage.total_token_count is not None
-            and usage.prompt_token_count is not None
-            else None
-        )
+        if usage
+        and usage.candidates_token_count is not None
+        else None
     )
 
     total_tokens = (
@@ -78,18 +84,35 @@ def generate_response(
     reasoning_tokens = (
         usage.thoughts_token_count
         if usage
+        and usage.thoughts_token_count is not None
         else None
     )
 
-    result = LLMResponse(
-        text=response.text if response.text is not None else "",
+    text = response.text if response.text else ""
+
+    # Defensive fallback in case response.text is empty.
+    if not text.strip() and response.candidates:
+
+        candidate = response.candidates[0]
+
+        if candidate.content and candidate.content.parts:
+
+            parts = []
+
+            for part in candidate.content.parts:
+
+                if getattr(part, "text", None):
+                    parts.append(part.text)
+
+            text = "".join(parts).strip()
+
+    return LLMResponse(
+        text=text,
         input_tokens=input_tokens,
         output_tokens=output_tokens,
         total_tokens=total_tokens,
         reasoning_tokens=reasoning_tokens,
     )
-
-    return result
 
 
 def log_actual_usage(
@@ -103,7 +126,10 @@ def log_actual_usage(
     max_output_tokens: int | None = None,
 ) -> None:
 
-    if response.input_tokens is None or response.output_tokens is None:
+    if (
+        response.input_tokens is None
+        or response.output_tokens is None
+    ):
         return
 
     record = UsageRecord(
@@ -118,7 +144,10 @@ def log_actual_usage(
         actual_cost=actual_cost,
         cost_error=(
             actual_cost - predicted_cost
-            if actual_cost is not None and predicted_cost is not None
+            if (
+                actual_cost is not None
+                and predicted_cost is not None
+            )
             else None
         ),
         max_output_tokens=max_output_tokens,

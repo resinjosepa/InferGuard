@@ -119,13 +119,39 @@ def analyze(request: AnalyzeRequest):
         }
 
     # 4. Call the selected LLM
-    response = generate_response(
-        prompt=request.prompt,
-        model_name=request.model,
-        workflow_type=context.workflow_type,
-        predicted_output_tokens=token_estimate.output_tokens,
-        max_output_tokens=request.max_output_tokens,
-    )
+    try:
+        response = generate_response(
+            prompt=request.prompt,
+            model_name=request.model,
+            workflow_type=context.workflow_type,
+            predicted_output_tokens=token_estimate.output_tokens,
+            max_output_tokens=request.max_output_tokens,
+        )
+
+    except RuntimeError as exc:
+        return {
+            "request_id": context.request_id,
+            "user_id": context.user_id,
+            "prompt": context.prompt,
+            "model": request.model,
+            "workflow_type": context.workflow_type,
+            "workflow_confidence": context.complexity_confidence,
+            "predicted_input_tokens": token_estimate.input_tokens,
+            "predicted_output_tokens": token_estimate.output_tokens,
+            "estimated_cost": estimated_cost,
+            "actual_cost": None,
+            "cost_error": None,
+            "actual_input_tokens": None,
+            "actual_output_tokens": None,
+            "actual_reasoning_tokens": None,
+            "actual_total_tokens": None,
+            "response": None,
+            "guardrail_action": guardrail.action,
+            "guardrail_reason": guardrail.reason,
+            "guardrail_threshold": guardrail.threshold,
+            "blocked": False,
+            "inference_error": str(exc),
+        }
 
     actual_cost = calculate_cost(
         input_tokens=response.input_tokens or 0,

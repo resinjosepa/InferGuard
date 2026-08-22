@@ -1,130 +1,200 @@
 import { useMemo, useState } from "react";
 
-function Requests({ stats, onRefresh, refreshing }) {
+function Requests({
+  stats,
+  onRefresh,
+  refreshing,
+}) {
   const [search, setSearch] = useState("");
-  const [workflowFilter, setWorkflowFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
+  const [workflowFilter, setWorkflowFilter] =
+    useState("all");
+  const [sortBy, setSortBy] =
+    useState("recent");
 
-  const requests = stats?.recent_requests || [];
+  const requests =
+    stats?.all_requests || [];
 
-  const workflows = [
-    "all",
-    ...new Set(requests.map((request) => request.workflow_type)),
-  ];
+  const workflows = useMemo(() => {
+    return [
+      "all",
+      ...new Set(
+        requests
+          .map(
+            (request) =>
+              request.workflow_type
+          )
+          .filter(Boolean)
+      ),
+    ];
+  }, [requests]);
 
   const filteredRequests = useMemo(() => {
     let result = [...requests];
 
-    // Search
     if (search.trim()) {
-      const query = search.toLowerCase();
+      const query =
+        search.trim().toLowerCase();
 
-      result = result.filter((request) =>
-        request.model.toLowerCase().includes(query)
-      );
+      result = result.filter((request) => {
+        const model =
+          String(
+            request.model || ""
+          ).toLowerCase();
+
+        const workflow =
+          String(
+            request.workflow_type || ""
+          ).toLowerCase();
+
+        return (
+          model.includes(query) ||
+          workflow.includes(query)
+        );
+      });
     }
 
-    // Workflow filter
     if (workflowFilter !== "all") {
       result = result.filter(
-        (request) => request.workflow_type === workflowFilter
+        (request) =>
+          request.workflow_type ===
+          workflowFilter
       );
     }
 
-    // Sorting
+    const number = (value) =>
+      value == null
+        ? 0
+        : Number(value);
+
     if (sortBy === "actual-cost") {
       result.sort(
-        (a, b) => (b.actual_cost || 0) - (a.actual_cost || 0)
+        (a, b) =>
+          number(b.actual_cost) -
+          number(a.actual_cost)
       );
     }
 
     if (sortBy === "predicted-cost") {
       result.sort(
         (a, b) =>
-          (b.predicted_cost || 0) - (a.predicted_cost || 0)
+          number(b.predicted_cost) -
+          number(a.predicted_cost)
       );
     }
 
     if (sortBy === "input-tokens") {
       result.sort(
         (a, b) =>
-          (b.input_tokens || 0) - (a.input_tokens || 0)
+          number(b.input_tokens) -
+          number(a.input_tokens)
       );
     }
 
     if (sortBy === "output-tokens") {
       result.sort(
         (a, b) =>
-          (b.actual_output_tokens || 0) -
-          (a.actual_output_tokens || 0)
+          number(b.actual_output_tokens) -
+          number(a.actual_output_tokens)
       );
     }
 
+    if (sortBy === "reasoning-tokens") {
+      result.sort(
+        (a, b) =>
+          number(b.reasoning_tokens) -
+          number(a.reasoning_tokens)
+      );
+    }
+
+    // Backend already sends newest first.
+    // Do not mutate that order for "recent".
+
     return result;
-  }, [requests, search, workflowFilter, sortBy]);
+  }, [
+    requests,
+    search,
+    workflowFilter,
+    sortBy,
+  ]);
+
+  const actualCost = requests.reduce(
+    (sum, request) =>
+      sum +
+      (Number(request.actual_cost) || 0),
+    0
+  );
+
+  const workflowCount =
+    new Set(
+      requests
+        .map(
+          (request) =>
+            request.workflow_type
+        )
+        .filter(Boolean)
+    ).size;
 
   return (
     <div className="requests-page">
-      {/* Header */}
       <div className="page-header">
         <div>
-          <p className="eyebrow">INFERENCE ACTIVITY</p>
+          <p className="eyebrow">
+            INFERENCE ACTIVITY
+          </p>
 
           <h1>Requests</h1>
 
           <p>
-            Inspect LLM requests captured and analyzed by InferGuard.
+            Inspect LLM requests captured and
+            analyzed by InferGuard.
           </p>
         </div>
 
-       <button
-        className="refresh-button"
-        onClick={onRefresh}
-        disabled={refreshing}
+        <button
+          className="refresh-button"
+          onClick={onRefresh}
+          disabled={refreshing}
         >
-        {refreshing ? "Refreshing..." : "↻ Refresh"}
+          {refreshing
+            ? "Refreshing..."
+            : "↻ Refresh"}
         </button>
       </div>
 
-      {/* Summary */}
       <div className="request-summary">
         <div className="summary-card">
           <span>Total Requests</span>
-          <strong>{requests.length}</strong>
+
+          <strong>
+            {stats?.total_requests ?? 0}
+          </strong>
         </div>
 
         <div className="summary-card">
           <span>Filtered</span>
-          <strong>{filteredRequests.length}</strong>
+
+          <strong>
+            {filteredRequests.length}
+          </strong>
         </div>
 
         <div className="summary-card">
           <span>Actual Cost</span>
+
           <strong>
-            $
-            {requests
-              .reduce(
-                (sum, request) =>
-                  sum + (request.actual_cost || 0),
-                0
-              )
-              .toFixed(6)}
+            ${actualCost.toFixed(6)}
           </strong>
         </div>
 
         <div className="summary-card">
           <span>Workflows</span>
+
           <strong>
-            {new Set(
-              requests.map(
-                (request) => request.workflow_type
-              )
-            ).size}
+            {workflowCount}
           </strong>
         </div>
       </div>
 
-      {/* Filters */}
       <section className="panel requests-container">
         <div className="requests-toolbar">
           <div className="search-box">
@@ -132,10 +202,12 @@ function Requests({ stats, onRefresh, refreshing }) {
 
             <input
               type="text"
-              placeholder="Search model..."
+              placeholder="Search model or workflow..."
               value={search}
               onChange={(event) =>
-                setSearch(event.target.value)
+                setSearch(
+                  event.target.value
+                )
               }
             />
           </div>
@@ -143,50 +215,71 @@ function Requests({ stats, onRefresh, refreshing }) {
           <select
             value={workflowFilter}
             onChange={(event) =>
-              setWorkflowFilter(event.target.value)
+              setWorkflowFilter(
+                event.target.value
+              )
             }
           >
-            {workflows.map((workflow) => (
-              <option
-                key={workflow}
-                value={workflow}
-              >
-                {workflow === "all"
-                  ? "All workflows"
-                  : workflow.replace("_", "-")}
-              </option>
-            ))}
+            {workflows.map(
+              (workflow) => (
+                <option
+                  key={workflow}
+                  value={workflow}
+                >
+                  {workflow === "all"
+                    ? "All workflows"
+                    : workflow.replace(
+                        "_",
+                        "-"
+                      )}
+                </option>
+              )
+            )}
           </select>
 
           <select
             value={sortBy}
             onChange={(event) =>
-              setSortBy(event.target.value)
+              setSortBy(
+                event.target.value
+              )
             }
           >
-            <option value="recent">Recent</option>
+            <option value="recent">
+              Recent
+            </option>
+
             <option value="actual-cost">
               Highest actual cost
             </option>
+
             <option value="predicted-cost">
               Highest predicted cost
             </option>
+
             <option value="input-tokens">
               Most input tokens
             </option>
+
             <option value="output-tokens">
               Most output tokens
+            </option>
+
+            <option value="reasoning-tokens">
+              Most reasoning tokens
             </option>
           </select>
         </div>
 
-        {/* Table */}
         {filteredRequests.length === 0 ? (
           <div className="empty-state">
-            <strong>No requests found</strong>
+            <strong>
+              No requests found
+            </strong>
 
             <p>
-              Try changing your search or workflow filter.
+              Try changing your search or
+              workflow filter.
             </p>
           </div>
         ) : (
@@ -208,8 +301,14 @@ function Requests({ stats, onRefresh, refreshing }) {
 
               <tbody>
                 {filteredRequests.map(
-                  (request, index) => (
-                    <tr key={index}>
+                  (request) => (
+                    <tr
+                      key={
+                        request.request_id ||
+                        request.id ||
+                        `${request.model}-${request.timestamp}`
+                      }
+                    >
                       <td>
                         <code>
                           {request.model}
@@ -233,36 +332,43 @@ function Requests({ stats, onRefresh, refreshing }) {
                       </td>
 
                       <td>
-                        {request.actual_output_tokens}
+                        {
+                          request.actual_output_tokens ??
+                          "-"
+                        }
                       </td>
 
                       <td>
-                        {request.reasoning_tokens ??
-                          "-"}
+                        {
+                          request.reasoning_tokens ??
+                          "-"
+                        }
                       </td>
 
                       <td>
                         {request.predicted_cost !=
                         null
-                          ? `$${request.predicted_cost.toFixed(
-                              6
-                            )}`
+                          ? `$${Number(
+                              request.predicted_cost
+                            ).toFixed(6)}`
                           : "-"}
                       </td>
 
                       <td>
-                        {request.actual_cost != null
-                          ? `$${request.actual_cost.toFixed(
-                              6
-                            )}`
+                        {request.actual_cost !=
+                        null
+                          ? `$${Number(
+                              request.actual_cost
+                            ).toFixed(6)}`
                           : "-"}
                       </td>
 
                       <td>
-                        {request.cost_error != null
-                          ? `$${request.cost_error.toFixed(
-                              6
-                            )}`
+                        {request.cost_error !=
+                        null
+                          ? `$${Number(
+                              request.cost_error
+                            ).toFixed(6)}`
                           : "-"}
                       </td>
                     </tr>

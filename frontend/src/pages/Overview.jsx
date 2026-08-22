@@ -1,68 +1,52 @@
-import { useEffect, useState } from "react";
-
 import MetricCard from "../components/MetricCard";
 import WorkflowDistribution from "../components/WorkflowDistribution";
 import RecentRequests from "../components/RecentRequests";
 import RequestAnalyzer from "../components/RequestAnalyzer";
 
-const API_URL = "http://127.0.0.1:8000";
+function Overview({
+  stats,
+  refreshStats,
+  refreshing,
+  setActivePage,
 
-function Overview({ setActivePage }) {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  analyzerPrompt,
+  setAnalyzerPrompt,
 
-  useEffect(() => {
-    fetch(`${API_URL}/dashboard/stats`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch dashboard data");
-        }
+  analyzerModel,
+  setAnalyzerModel,
 
-        return response.json();
-      })
-      .then((data) => {
-        setStats(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
+  analyzerMaxOutputTokens,
+  setAnalyzerMaxOutputTokens,
 
-  if (loading) {
-    return <div className="page-loading">Loading dashboard...</div>;
-  }
+  analyzerResult,
 
-  if (error) {
-    return (
-      <div className="page-error">
-        <h2>Unable to load dashboard</h2>
-        <p>{error}</p>
-        <p>Make sure the FastAPI backend is running on port 8000.</p>
-      </div>
-    );
-  }
+  analyzerLoading,
+  analyzerError,
 
+  analyzeRequest,
+}) {
   return (
     <div className="page">
 
       {/* Header */}
       <div className="page-header">
         <div>
-          <p className="eyebrow">INFERENCE MONITORING</p>
+          <p className="eyebrow">
+            INFERENCE MONITORING
+          </p>
 
           <h1>Overview</h1>
 
           <p>
-            Monitor LLM inference usage, cost, and guardrail decisions.
+            Monitor LLM inference usage, cost,
+            and guardrail decisions.
           </p>
         </div>
       </div>
 
       {/* Metrics */}
       <div className="metrics-grid">
+
         <MetricCard
           title="Total Requests"
           value={stats.total_requests}
@@ -70,33 +54,64 @@ function Overview({ setActivePage }) {
 
         <MetricCard
           title="Estimated Cost"
-          value={`$${stats.estimated_cost.toFixed(4)}`}
+          value={`$${Number(
+            stats.estimated_cost ?? 0
+          ).toFixed(4)}`}
         />
 
         <MetricCard
           title="Actual Cost"
-          value={`$${stats.actual_cost.toFixed(4)}`}
+          value={`$${Number(
+            stats.actual_cost ?? 0
+          ).toFixed(4)}`}
         />
 
         <MetricCard
           title="Cost Variance"
-          value={`$${stats.cost_variance.toFixed(4)}`}
+          value={`$${Number(
+            stats.cost_variance ?? 0
+          ).toFixed(4)}`}
         />
+
       </div>
 
-      {/* Request Analyzer */}
-      <RequestAnalyzer />
+      {/* Live Request Analyzer */}
+      <RequestAnalyzer
+        prompt={analyzerPrompt}
+        setPrompt={setAnalyzerPrompt}
+
+        model={analyzerModel}
+        setModel={setAnalyzerModel}
+
+        maxOutputTokens={analyzerMaxOutputTokens}
+        setMaxOutputTokens={
+          setAnalyzerMaxOutputTokens
+        }
+
+        result={analyzerResult}
+
+        loading={analyzerLoading}
+        error={analyzerError}
+
+        analyzeRequest={analyzeRequest}
+      />
 
       {/* Analytics */}
       <div className="dashboard-grid">
+
         <WorkflowDistribution
-          distribution={stats.workflow_distribution}
+          distribution={
+            stats.workflow_distribution
+          }
         />
 
         <RecentRequests
-          requests={stats.recent_requests}
+          requests={
+            stats.recent_requests || []
+          }
           setActivePage={setActivePage}
         />
+
       </div>
 
     </div>
